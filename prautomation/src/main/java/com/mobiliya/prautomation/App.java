@@ -1,6 +1,21 @@
 package com.mobiliya.prautomation;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.List;
+
+import org.eclipse.egit.github.core.MergeStatus;
+import org.eclipse.egit.github.core.PullRequest;
+
+import com.mobiliya.connmanagement.ConnectionManager;
 import com.mobiliya.connmanagement.GithubAuthentication;
+import com.mobiliya.connmanagement.GithubResponse;
+import com.mobiliya.connmanagement.GithubSegmentType;
+import com.mobiliya.connmanagement.RequestTypes;
+import com.mobiliya.githubservice.GithubPRService;
+import com.mobiliya.parsemanagement.GithubPR;
 import com.mobiliya.utility.GithubConstants;
 
 /**
@@ -17,5 +32,26 @@ public class App
         		GithubConstants.GITHUB_SERIVICEACCOUNT_PASSWORD);
         gitHubAuthentication.performAutnetication();
         gitHubAuthentication.listRepositories();
+        
+        //List<GithubPR> prList = GithubPRService.getPullRequests(GithubConstants.GITHUB_Automation_Repository);
+        
+        //List<PullRequest> prListStateAll = GithubPRService.getPullRequestsRepoNameState(GithubConstants.GITHUB_Automation_Repository,"all");
+        List<PullRequest> prListAll = GithubPRService.getPullRequestsRepoNameState(GithubConstants.GITHUB_Automation_Repository, GithubConstants.GITHUB_PRSTATE_OPEN);
+        
+        //A trail merge on behalf of person for a PR
+        PullRequest trialPR = null;
+        if(!prListAll.isEmpty()) {
+        	trialPR = prListAll.get(0);
+        	
+        	MergeStatus mergeStatus =  GithubPRService.mergePullRequest(trialPR,"This is the merge from Java Utility", GithubConstants.GITHUB_Automation_Repository);
+        	if(mergeStatus != null) {
+        		System.out.println("is mergerd::"+ mergeStatus.isMerged());
+    			System.out.println("Sha Id::" + mergeStatus.getSha());
+    			System.out.println("Message::" + mergeStatus.getMessage());
+        	}
+        	
+        }
+        
+        
     }
 }

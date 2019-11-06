@@ -1,3 +1,9 @@
-com/mobiliya/connmanagement/GithubAuthentication.class
-com/mobiliya/utility/GithubConstants.class
-com/mobiliya/prautomation/App.class
+com\mobiliya\prautomation\App.class
+com\mobiliya\connmanagement\ConnectionManager.class
+com\mobiliya\parsemanagement\GithubPR.class
+com\mobiliya\utility\GithubConstants.class
+com\mobiliya\connmanagement\RequestTypes.class
+com\mobiliya\githubservice\GithubPRService.class
+com\mobiliya\connmanagement\GithubAuthentication.class
+com\mobiliya\connmanagement\GithubResponse.class
+com\mobiliya\connmanagement\GithubSegmentType.class
