@@ -12,6 +12,7 @@ package com.mobiliya.connmanagement;
 public enum GithubSegmentType {
 	GET_PULL_REQUESTS,
 	MERGE_PULL_REQUESTS,
-	CHECK_MERGIBILITY_PULLREQUEST
+	CHECK_MERGIBILITY_PULLREQUEST,
+	MERGE_REQUEST
 
 }

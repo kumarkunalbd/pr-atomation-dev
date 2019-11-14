@@ -14,8 +14,12 @@ import com.mobiliya.connmanagement.GithubAuthentication;
 import com.mobiliya.connmanagement.GithubResponse;
 import com.mobiliya.connmanagement.GithubSegmentType;
 import com.mobiliya.connmanagement.RequestTypes;
+import com.mobiliya.githubservice.GithubBranchService;
 import com.mobiliya.githubservice.GithubPRService;
 import com.mobiliya.parsemanagement.GithubPR;
+import com.mobiliya.parsemanagement.GithubResponseGsonMergeParseService;
+import com.mobiliya.utility.BranchMergeRequestBody;
+import com.mobiliya.utility.BranchMergeStatus;
 import com.mobiliya.utility.GithubConstants;
 
 /**
@@ -39,9 +43,9 @@ public class App
         List<PullRequest> prListAll = GithubPRService.getPullRequestsRepoNameState(GithubConstants.GITHUB_Automation_Repository, GithubConstants.GITHUB_PRSTATE_OPEN);
         
         //A trail merge on behalf of person for a PR
-        PullRequest trialPR = null;
+        /*PullRequest trialPR = null;
         if(!prListAll.isEmpty()) {
-        	trialPR = prListAll.get(0);
+        	trialPR = prListAll.get(1);
         	
         	MergeStatus mergeStatus =  GithubPRService.mergePullRequest(trialPR,"This is the merge from Java Utility", GithubConstants.GITHUB_Automation_Repository);
         	if(mergeStatus != null) {
@@ -50,8 +54,16 @@ public class App
     			System.out.println("Message::" + mergeStatus.getMessage());
         	}
         	
-        }
+        }*/
         
+        
+      //Merge 2 branches
+        /*BranchMergeRequestBody branchMergeBody = new BranchMergeRequestBody("ftr9kmrkunal", "master", "Trial merger from master to ftr9kmrkunal");
+        BranchMergeStatus mergeStatus = GithubBranchService.mergeBranchOnRepo(GithubConstants.GITHUB_Automation_Repository, branchMergeBody);*/
+        
+      // MergeResponse Test
+        BranchMergeStatus statusMerge = GithubResponseGsonMergeParseService.parseTheResponse(new GithubResponse(201));
+        System.out.print(statusMerge.toString());
         
     }
 }

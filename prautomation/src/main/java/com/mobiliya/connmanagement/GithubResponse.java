@@ -15,6 +15,26 @@ public class GithubResponse {
 	
 	private int reponseCode;
 	private InputStream responseStream;
+	
+	
+	
+	public GithubResponse() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	public GithubResponse(int reponseCode) {
+		super();
+		this.reponseCode = reponseCode;
+	}
+
+	public GithubResponse(int reponseCode, InputStream responseStream) {
+		super();
+		this.reponseCode = reponseCode;
+		this.responseStream = responseStream;
+	}
+	
+
 	public int getReponseCode() {
 		return reponseCode;
 	}
@@ -28,4 +48,10 @@ public class GithubResponse {
 		this.responseStream = responseStream;
 	}
 	
+	@Override
+	public String toString() {
+		return "GithubResponse [reponseCode=" + reponseCode + ", responseStream=" + responseStream + ", toString()="
+				+ super.toString() + "]";
+	}
+		
 }

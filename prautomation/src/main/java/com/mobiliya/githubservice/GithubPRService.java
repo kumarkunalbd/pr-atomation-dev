@@ -40,7 +40,7 @@ public class GithubPRService {
 	        		.concat(repository).concat("/pulls?state=all");
 	        ConnectionManager aConManager = new ConnectionManager();
 	        aConManager.setRequestUrl(githubPRsAllUrl);
-	        aConManager.setRequestType(RequestTypes.GET);
+	        aConManager.setRequestType(String.valueOf(RequestTypes.GET));
 	        aConManager.setGuthubSegmentType(GithubSegmentType.GET_PULL_REQUESTS);
 	        HashMap<String, Object> params = new HashMap<String, Object>();
 	        params.put(GithubConstants.GITHUB_SERIVICEACCOUNT_FIELDNAME, GithubConstants.GITHUB_SERIVICEACCOUNT);
