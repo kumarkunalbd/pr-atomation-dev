@@ -82,6 +82,9 @@ public class GithubPRService {
 			listPRs.forEach(aPullRequest -> {
 				System.out.println(aPullRequest.getUrl());
 				System.out.println(aPullRequest.getNumber());
+				System.out.println(aPullRequest.getCommits());
+				System.out.println(aPullRequest.getBase().getSha());
+				System.out.println(aPullRequest.getHead().getSha());
 			});
 			
 		} catch (IOException e) {

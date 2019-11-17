@@ -14,6 +14,7 @@ import com.mobiliya.connmanagement.GithubResponse;
 import com.mobiliya.connmanagement.GithubSegmentType;
 import com.mobiliya.connmanagement.RequestTypes;
 import com.mobiliya.parsemanagement.GithubPR;
+import com.mobiliya.parsemanagement.GithubResponseGsonParserLayer;
 import com.mobiliya.utility.BranchMergeRequestBody;
 import com.mobiliya.utility.BranchMergeStatus;
 import com.mobiliya.utility.GithubConstants;
@@ -58,6 +59,7 @@ public class GithubBranchService {
 	
 	public static BranchMergeStatus mergeBranchOnRepo(String repoName, BranchMergeRequestBody reuqestBody) {
 		
+		BranchMergeStatus mergeStatus=null;
 		String gitHubMergeUrl = (GithubConstants.GITHUB_RESTAPI_INITIAL+GithubConstants.GITHUB_SERIVICEACCOUNT+ "/")
         		.concat(repoName).concat("/merges");
 		ConnectionManager aConManager = new ConnectionManager();
@@ -73,20 +75,22 @@ public class GithubBranchService {
         String readLine = null;
         try {
         	GithubResponse aGuthubResponse = aConManager.createPostRequestGithub();
-        	BufferedReader in = new BufferedReader(
+        	/*BufferedReader in = new BufferedReader(
         			new InputStreamReader(aGuthubResponse.getResponseStream()));
         	StringBuffer response = new StringBuffer();
         	while ((readLine = in .readLine()) != null) {
         		response.append(readLine);
         	} in .close();
         	// print result
-        	System.out.println("JSON String Result " + response.toString());
+        	System.out.println("JSON String Result " + response.toString());*/
+        	mergeStatus = GithubResponseGsonParserLayer.parseResponseFromConnection(aGuthubResponse, aConManager);
+        	
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
-		return null;
+		return mergeStatus;
 	}
 
 }

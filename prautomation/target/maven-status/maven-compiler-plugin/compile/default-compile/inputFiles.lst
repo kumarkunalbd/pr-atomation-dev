@@ -7,6 +7,7 @@ D:\Git-Projects\Pr-Github-repo\pr-atomation-dev\prautomation\src\main\java\com\m
 D:\Git-Projects\Pr-Github-repo\pr-atomation-dev\prautomation\src\main\java\com\mobiliya\parsemanagement\GithubResponseGsonParserLayer.java
 D:\Git-Projects\Pr-Github-repo\pr-atomation-dev\prautomation\src\main\java\com\mobiliya\utility\BranchMergeStatus.java
 D:\Git-Projects\Pr-Github-repo\pr-atomation-dev\prautomation\src\main\java\com\mobiliya\utility\BranchMergeRequestBody.java
+D:\Git-Projects\Pr-Github-repo\pr-atomation-dev\prautomation\src\main\java\com\mobiliya\connmanagement\GitResponse.java
 D:\Git-Projects\Pr-Github-repo\pr-atomation-dev\prautomation\src\main\java\com\mobiliya\utility\GithubConstants.java
 D:\Git-Projects\Pr-Github-repo\pr-atomation-dev\prautomation\src\main\java\com\mobiliya\utility\CommitBlob.java
 D:\Git-Projects\Pr-Github-repo\pr-atomation-dev\prautomation\src\main\java\com\mobiliya\connmanagement\RequestTypes.java

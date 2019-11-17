@@ -32,15 +32,18 @@ import com.mobiliya.utility.CommitBlob;
  */
 public class GithubResponseGsonMergeParseService {
 	
+	private InputStream responseStream;
+	
+	
 	public static BranchMergeStatus parseTheResponse(GithubResponse response) {
 		BranchMergeStatus status = null;
 		
 		File initialFile = new File("src/main/resources/Merging-JSON-Response.json");
 	    try {
 			InputStream targetStream = new FileInputStream(initialFile);
-			switch (response.getReponseCode()) {
+			switch (response.getResponseCode()) {
 			case HttpURLConnection.HTTP_CREATED:
-				status = parseCreatedResponseStream(targetStream);
+				status = parseCreatedResponseStream(response.getResponseStream());
 				
 				break;
 
@@ -53,7 +56,7 @@ public class GithubResponseGsonMergeParseService {
 						"  \"message\": \"Merge Conflict\"\r\n" + 
 						"}";
 				targetStream = new ByteArrayInputStream(string.getBytes(Charset.forName("UTF-8")));
-				status = parseConflictResponseStream(targetStream);
+				status = parseConflictResponseStream(response.getResponseStream());
 				break;
 				
 			case HttpURLConnection.HTTP_NOT_FOUND:
@@ -61,7 +64,7 @@ public class GithubResponseGsonMergeParseService {
 						"  \"message\": \"Base/Head does not exist\"\r\n" + 
 						"}";
 				targetStream = new ByteArrayInputStream(string2.getBytes(Charset.forName("UTF-8")));
-				status = parseMissingHeadBaseResponseStream(targetStream);
+				status = parseMissingHeadBaseResponseStream(response.getResponseStream());
 				break;
 				
 			default:

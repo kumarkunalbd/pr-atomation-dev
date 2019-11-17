@@ -42,6 +42,7 @@ public class App
         //List<PullRequest> prListStateAll = GithubPRService.getPullRequestsRepoNameState(GithubConstants.GITHUB_Automation_Repository,"all");
         List<PullRequest> prListAll = GithubPRService.getPullRequestsRepoNameState(GithubConstants.GITHUB_Automation_Repository, GithubConstants.GITHUB_PRSTATE_OPEN);
         
+        
         //A trail merge on behalf of person for a PR
         /*PullRequest trialPR = null;
         if(!prListAll.isEmpty()) {
@@ -58,12 +59,18 @@ public class App
         
         
       //Merge 2 branches
+        for (PullRequest aPR : prListAll) {
+        	String prHeadSha = aPR.getHead().getRef();
+        	String commitMessage  = "A trial merge from master to"+prHeadSha;
+        	BranchMergeRequestBody branchMergeBody = new BranchMergeRequestBody(prHeadSha, "b9fa17dd6ac6f3369dc74bcccdd8cd7a18ea25e0", commitMessage);
+            BranchMergeStatus mergeStatus = GithubBranchService.mergeBranchOnRepo(GithubConstants.GITHUB_Automation_Repository, branchMergeBody);
+        }
         /*BranchMergeRequestBody branchMergeBody = new BranchMergeRequestBody("ftr9kmrkunal", "master", "Trial merger from master to ftr9kmrkunal");
         BranchMergeStatus mergeStatus = GithubBranchService.mergeBranchOnRepo(GithubConstants.GITHUB_Automation_Repository, branchMergeBody);*/
         
       // MergeResponse Test
-        BranchMergeStatus statusMerge = GithubResponseGsonMergeParseService.parseTheResponse(new GithubResponse(201));
-        System.out.print(statusMerge.toString());
+        /*BranchMergeStatus statusMerge = GithubResponseGsonMergeParseService.parseTheResponse(new GithubResponse(201));
+        System.out.print(statusMerge.toString());*/
         
     }
 }

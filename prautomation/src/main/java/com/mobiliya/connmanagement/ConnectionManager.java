@@ -1,10 +1,13 @@
 package com.mobiliya.connmanagement;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Base64;
 import java.util.HashMap;
 
@@ -94,7 +97,7 @@ public class ConnectionManager {
 		    		 GithubResponse githubResponse = new GithubResponse();
 		    		 conection.setRequestProperty(userId, password); // set userId its a sample here
 		    		 int responseCode = conection.getResponseCode();
-		    		 githubResponse.setReponseCode(responseCode);
+		    		 githubResponse.setResponseCode(responseCode);
 		    		 githubResponse.setResponseStream(conection.getInputStream());
 		    		 return githubResponse;
 		    	}
@@ -107,6 +110,7 @@ public class ConnectionManager {
 	
 
 	public GithubResponse createPostRequestGithub() throws IOException{
+		GithubResponse aGithubResponse = null;
 		if(this.requestType != null && this.requestUrl != null && this.guthubSegmentType != null) {
 			System.setProperty("http.agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.29 Safari/537.36");
 			URL urlForPostRequest = new URL(this.requestUrl);
@@ -144,16 +148,26 @@ public class ConnectionManager {
 		    		 System.out.println("Header Fields:"+conection.getHeaderFields());
 		    		    
 		    		 int responseCode = conection.getResponseCode();
-		    		 githubResponse.setReponseCode(responseCode);
-		    		 githubResponse.setResponseStream(conection.getInputStream());
-		    		 
-		    		 
+		    		 if(responseCode == HttpURLConnection.HTTP_NOT_FOUND) {
+		    			 githubResponse.setResponseCode(responseCode);
+		    			 String string2 = "{\r\n" + 
+		    					 "  \"message\": \"Base/Head does not exist\"\r\n" + 
+		    					 "}";
+		    			 InputStream targetStream = new ByteArrayInputStream(string2.getBytes(Charset.forName("UTF-8")));
+		    			 githubResponse.setResponseStream(targetStream);
+		    			 
+		    		 }else {
+		    			 githubResponse.setResponseCode(responseCode);
+			    		 githubResponse.setResponseStream(conection.getInputStream());
+		    		 }
+		    		
+		    		
 		    		 return githubResponse;
 		    	}
 		    }
 			
 		}
-		return null;
+		return aGithubResponse;
 		
 	}
 	

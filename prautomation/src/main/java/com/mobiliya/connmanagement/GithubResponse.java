@@ -11,9 +11,9 @@ import java.io.InputStream;
  * for requests 
  *
  */
-public class GithubResponse {
+public class GithubResponse{
 	
-	private int reponseCode;
+	private int responseCode;
 	private InputStream responseStream;
 	
 	
@@ -25,32 +25,39 @@ public class GithubResponse {
 	
 	public GithubResponse(int reponseCode) {
 		super();
-		this.reponseCode = reponseCode;
+		this.responseCode = reponseCode;
 	}
 
 	public GithubResponse(int reponseCode, InputStream responseStream) {
 		super();
-		this.reponseCode = reponseCode;
+		this.responseCode = reponseCode;
 		this.responseStream = responseStream;
 	}
 	
+	
+	
+	
+	
+	
+	public int getResponseCode() {
+		return responseCode;
+	}
 
-	public int getReponseCode() {
-		return reponseCode;
+	public void setResponseCode(int responseCode) {
+		this.responseCode = responseCode;
 	}
-	public void setReponseCode(int reponseCode) {
-		this.reponseCode = reponseCode;
-	}
+
 	public InputStream getResponseStream() {
 		return responseStream;
 	}
+
 	public void setResponseStream(InputStream responseStream) {
 		this.responseStream = responseStream;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "GithubResponse [reponseCode=" + reponseCode + ", responseStream=" + responseStream + ", toString()="
+		return "GithubResponse [reponseCode=" + this.responseCode + ", responseStream=" + this.responseStream + ", toString()="
 				+ super.toString() + "]";
 	}
 		
