@@ -11,14 +11,18 @@ import java.util.List;
 
 import org.eclipse.egit.github.core.MergeStatus;
 import org.eclipse.egit.github.core.PullRequest;
+import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.service.PullRequestService;
+import org.eclipse.egit.github.core.service.RepositoryService;
 
 import com.mobiliya.connmanagement.ConnectionManager;
 import com.mobiliya.connmanagement.GithubResponse;
 import com.mobiliya.connmanagement.GithubSegmentType;
 import com.mobiliya.connmanagement.RequestTypes;
 import com.mobiliya.parsemanagement.GithubPR;
+import com.mobiliya.utility.BranchMergeRequestBody;
+import com.mobiliya.utility.BranchMergeStatus;
 import com.mobiliya.utility.GithubConstants;
 
 
@@ -29,11 +33,60 @@ import com.mobiliya.utility.GithubConstants;
  */
 public class GithubPRService {
 	
+	private GithubBranchService aBranchService;
+	private String mergingHeadSha;
+	private String statusForPRs;
+	private String prRepositoryOwnerName;
+	private String prRepositoryName;
+	
+	public GithubBranchService getaBranchService() {
+		return aBranchService;
+	}
+
+	public void setaBranchService(GithubBranchService aBranchService) {
+		this.aBranchService = aBranchService;
+	}
+	
+	
+	public String getMergingHeadSha() {
+		return mergingHeadSha;
+	}
+
+	public void setMergingHeadSha(String mergingHeadSha) {
+		this.mergingHeadSha = mergingHeadSha;
+	}
+	
+	public String getStatusForPRs() {
+		return statusForPRs;
+	}
+
+	public void setStatusForPRs(String statusForPRs) {
+		this.statusForPRs = statusForPRs;
+	}
+
+	public String getPrRepositoryOwnerName() {
+		return prRepositoryOwnerName;
+	}
+
+	public void setPrRepositoryOwnerName(String prRepositoryOwnerName) {
+		this.prRepositoryOwnerName = prRepositoryOwnerName;
+	}
+
+	public String getPrRepositoryName() {
+		return prRepositoryName;
+	}
+
+	public void setPrRepositoryName(String prRepositoryName) {
+		this.prRepositoryName = prRepositoryName;
+	}
+
 	/**
 	 * @author kumar
 	 * This will return list of all pull requests based on state requested.
 	 * 
 	 */
+	
+	
 	public static List<GithubPR> getPullRequests(String repository){
 		
 		 String githubPRsAllUrl = (GithubConstants.GITHUB_RESTAPI_INITIAL+GithubConstants.GITHUB_SERIVICEACCOUNT+ "/")
@@ -65,6 +118,7 @@ public class GithubPRService {
 		return null;
 	}
 	
+
 	/**
 	 * @author kumar
 	 * This will return list of all pull requests based on state requested.
@@ -136,7 +190,54 @@ public class GithubPRService {
 		return null;
 		
 	}
+	
+	public void mergePrList(List<PullRequest> listPRs) {
+		
+		if(this.mergingHeadSha != null) {
+			
+			for (PullRequest aPR : listPRs) {
+				String prHeadSha = aPR.getHead().getRef();
+				String commitMessage  = "A trial merge from master to"+prHeadSha;
+				BranchMergeRequestBody branchMergeBody = new BranchMergeRequestBody(prHeadSha, this.mergingHeadSha, commitMessage);
+				BranchMergeStatus mergeStatus = GithubBranchService.mergeBranchOnRepo(GithubConstants.GITHUB_Automation_Repository, branchMergeBody);
+			}
+			
+		}else {
+			System.out.println("The Sha which need to be merged into PRs is not found");
+		}
 
+		
 
+	}
+	
+	public void mergeDefaultBranchShaToPRs() {
+		if(this.prRepositoryName != null && this.prRepositoryOwnerName != null 
+				&& this.statusForPRs != null) {
+			
+			List<PullRequest> prListAll = GithubPRService.getPullRequestsRepoNameState(this.prRepositoryName, this.statusForPRs);
+			RepositoryService service = new RepositoryService();
+			
+			try {
+				
+				Repository repo = service.getRepository(this.prRepositoryOwnerName, this.prRepositoryName);
+				String masterBranchSha = GithubBranchService.getShaForBranchName(repo.getMasterBranch(), repo, service);
+				for (PullRequest aPR : prListAll) {
+					String prHeadSha = aPR.getHead().getRef();
+					String commitMessage  = "A trial merge from master to"+prHeadSha;
+					BranchMergeRequestBody branchMergeBody = new BranchMergeRequestBody(prHeadSha, masterBranchSha, commitMessage);
+					BranchMergeStatus mergeStatus = GithubBranchService.mergeBranchOnRepo(GithubConstants.GITHUB_Automation_Repository, branchMergeBody);
+					System.out.println(mergeStatus);
+				}
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+			
+		}else {
+			System.out.println("GithubPRService::: Provide information about repository");
+		}
+		
+	}
 	
 }

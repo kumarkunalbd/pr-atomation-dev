@@ -8,6 +8,10 @@ import java.util.List;
 
 import org.eclipse.egit.github.core.MergeStatus;
 import org.eclipse.egit.github.core.PullRequest;
+import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.RepositoryBranch;
+import org.eclipse.egit.github.core.RepositoryIssue;
+import org.eclipse.egit.github.core.service.RepositoryService;
 
 import com.mobiliya.connmanagement.ConnectionManager;
 import com.mobiliya.connmanagement.GithubAuthentication;
@@ -39,8 +43,13 @@ public class App
         
         //List<GithubPR> prList = GithubPRService.getPullRequests(GithubConstants.GITHUB_Automation_Repository);
         
-        //List<PullRequest> prListStateAll = GithubPRService.getPullRequestsRepoNameState(GithubConstants.GITHUB_Automation_Repository,"all");
-        List<PullRequest> prListAll = GithubPRService.getPullRequestsRepoNameState(GithubConstants.GITHUB_Automation_Repository, GithubConstants.GITHUB_PRSTATE_OPEN);
+        //List<PullRequest> prListStateAll = GithubPRService.getPullRequestsRepoNameState(GithubConstants.GITHUB_Automation_Repository,"open");
+       
+        GithubPRService aGitHubPrService = new GithubPRService();
+		aGitHubPrService.setPrRepositoryOwnerName(GithubConstants.GITHUB_SERIVICEACCOUNT);
+		aGitHubPrService.setPrRepositoryName(GithubConstants.GITHUB_Automation_Repository);
+		aGitHubPrService.setStatusForPRs(GithubConstants.GITHUB_PRSTATE_OPEN);
+		aGitHubPrService.mergeDefaultBranchShaToPRs();
         
         
         //A trail merge on behalf of person for a PR
@@ -59,12 +68,12 @@ public class App
         
         
       //Merge 2 branches
-        for (PullRequest aPR : prListAll) {
+        /*for (PullRequest aPR : prListAll) {
         	String prHeadSha = aPR.getHead().getRef();
         	String commitMessage  = "A trial merge from master to"+prHeadSha;
         	BranchMergeRequestBody branchMergeBody = new BranchMergeRequestBody(prHeadSha, "b9fa17dd6ac6f3369dc74bcccdd8cd7a18ea25e0", commitMessage);
             BranchMergeStatus mergeStatus = GithubBranchService.mergeBranchOnRepo(GithubConstants.GITHUB_Automation_Repository, branchMergeBody);
-        }
+        }*/
         /*BranchMergeRequestBody branchMergeBody = new BranchMergeRequestBody("ftr9kmrkunal", "master", "Trial merger from master to ftr9kmrkunal");
         BranchMergeStatus mergeStatus = GithubBranchService.mergeBranchOnRepo(GithubConstants.GITHUB_Automation_Repository, branchMergeBody);*/
         

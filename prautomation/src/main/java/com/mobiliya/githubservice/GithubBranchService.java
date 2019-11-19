@@ -9,6 +9,10 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
 
+import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.RepositoryBranch;
+import org.eclipse.egit.github.core.service.RepositoryService;
+
 import com.mobiliya.connmanagement.ConnectionManager;
 import com.mobiliya.connmanagement.GithubResponse;
 import com.mobiliya.connmanagement.GithubSegmentType;
@@ -91,6 +95,32 @@ public class GithubBranchService {
 			e.printStackTrace();
 		} 
 		return mergeStatus;
+	}
+	
+	public static String getShaForBranchName(String branchName, Repository repo, RepositoryService service) {
+		String sha = null;
+		
+		System.out.println(repo.getMasterBranch());
+		List<RepositoryBranch> listBranches;
+		try {
+			listBranches = service.getBranches(repo);
+			RepositoryBranch masterBranch = null;
+			for (RepositoryBranch aBranch : listBranches) {
+				if(aBranch.getName().equals(repo.getMasterBranch())) {
+					masterBranch = aBranch;
+					break;
+				}
+			}
+			if(masterBranch != null) {
+				sha = masterBranch.getCommit().getSha();
+				System.out.println(sha);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return sha;
 	}
 
 }
