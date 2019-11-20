@@ -22,6 +22,7 @@ import com.mobiliya.parsemanagement.GithubResponseGsonParserLayer;
 import com.mobiliya.utility.BranchMergeRequestBody;
 import com.mobiliya.utility.BranchMergeStatus;
 import com.mobiliya.utility.GithubConstants;
+import com.mobiliya.utility.PrAutoSingletonThSf;
 
 /**
  * @author kumar
@@ -29,6 +30,60 @@ import com.mobiliya.utility.GithubConstants;
  */
 public class GithubBranchService {
 	
+	private String gitRestApiUrlPrefix;
+	private String serviceAccountName;
+	private String serviceAccountPassword;
+	private String repoOwnerName;
+	
+	
+	
+	
+	public GithubBranchService(String gitRestApiUrlPrefix, String serviceAccountName, String serviceAccountPassword, String repoOwner) {
+		super();
+		this.gitRestApiUrlPrefix = gitRestApiUrlPrefix;
+		this.serviceAccountName = serviceAccountName;
+		this.serviceAccountPassword = serviceAccountPassword;
+		this.repoOwnerName = repoOwner;
+	}
+	
+	public String getGitRestApiUrlPrefix() {
+		return gitRestApiUrlPrefix;
+	}
+
+
+	public void setGitRestApiUrlPrefix(String gitRestApiUrlPrefix) {
+		this.gitRestApiUrlPrefix = gitRestApiUrlPrefix;
+	}
+
+
+	public String getServiceAccountName() {
+		return serviceAccountName;
+	}
+
+
+	public void setServiceAccountName(String serviceAccountName) {
+		this.serviceAccountName = serviceAccountName;
+	}
+
+
+	public String getServiceAccountPassword() {
+		return serviceAccountPassword;
+	}
+
+
+	public void setServiceAccountPassword(String serviceAccountPassword) {
+		this.serviceAccountPassword = serviceAccountPassword;
+	}
+	
+	public String getRepoOwnerName() {
+		return repoOwnerName;
+	}
+
+	public void setRepoOwnerName(String repoOwnerName) {
+		this.repoOwnerName = repoOwnerName;
+	}
+	
+
 	
 	/*public static List<GithubPR> mergeBranches(String baseBranch, String headBranch){
 		
@@ -61,39 +116,48 @@ public class GithubBranchService {
 		return null;
 	}*/
 	
-	public static BranchMergeStatus mergeBranchOnRepo(String repoName, BranchMergeRequestBody reuqestBody) {
+
+	
+	public BranchMergeStatus mergeBranchOnRepo(String repoName, BranchMergeRequestBody reuqestBody) {
 		
 		BranchMergeStatus mergeStatus=null;
-		String gitHubMergeUrl = (GithubConstants.GITHUB_RESTAPI_INITIAL+GithubConstants.GITHUB_SERIVICEACCOUNT+ "/")
-        		.concat(repoName).concat("/merges");
-		ConnectionManager aConManager = new ConnectionManager();
-        aConManager.setRequestUrl(gitHubMergeUrl);
-        System.out.println("Request Type::"+ RequestTypes.POST);
-        aConManager.setRequestType(String.valueOf(RequestTypes.POST));
-        aConManager.setGuthubSegmentType(GithubSegmentType.MERGE_REQUEST);
-        HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put(GithubConstants.GITHUB_SERIVICEACCOUNT_FIELDNAME, GithubConstants.GITHUB_SERIVICEACCOUNT);
-        params.put(GithubConstants.GITHUB_SERIVICEACCOUNT_PASSWORD_FIELDNAME,GithubConstants.GITHUB_SERIVICEACCOUNT_PASSWORD);
-        params.put(GithubConstants.GITHUB_KEY_REQUESTBODY, reuqestBody);
-        aConManager.setParameters(params);
-        String readLine = null;
-        try {
-        	GithubResponse aGuthubResponse = aConManager.createPostRequestGithub();
-        	/*BufferedReader in = new BufferedReader(
-        			new InputStreamReader(aGuthubResponse.getResponseStream()));
-        	StringBuffer response = new StringBuffer();
-        	while ((readLine = in .readLine()) != null) {
-        		response.append(readLine);
-        	} in .close();
-        	// print result
-        	System.out.println("JSON String Result " + response.toString());*/
-        	mergeStatus = GithubResponseGsonParserLayer.parseResponseFromConnection(aGuthubResponse, aConManager);
-        	
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
+		
+		if(this.gitRestApiUrlPrefix != null && this.serviceAccountName!= null 
+				&& this.serviceAccountPassword != null && this.repoOwnerName != null) {
+			
+			String gitHubMergeUrl = (this.gitRestApiUrlPrefix+this.repoOwnerName+ "/")
+	        		.concat(repoName).concat("/merges");
+			ConnectionManager aConManager = new ConnectionManager();
+	        aConManager.setRequestUrl(gitHubMergeUrl);
+	        System.out.println("Request Type::"+ RequestTypes.POST);
+	        aConManager.setRequestType(String.valueOf(RequestTypes.POST));
+	        aConManager.setGuthubSegmentType(GithubSegmentType.MERGE_REQUEST);
+	        HashMap<String, Object> params = new HashMap<String, Object>();
+	        params.put(GithubConstants.GITHUB_SERIVICEACCOUNT_FIELDNAME, this.serviceAccountName);
+	        params.put(GithubConstants.GITHUB_SERIVICEACCOUNT_PASSWORD_FIELDNAME,this.serviceAccountPassword);
+	        params.put(GithubConstants.GITHUB_KEY_REQUESTBODY, reuqestBody);
+	        aConManager.setParameters(params);
+	        String readLine = null;
+	        try {
+	        	GithubResponse aGuthubResponse = aConManager.createPostRequestGithub();
+	        	/*BufferedReader in = new BufferedReader(
+	        			new InputStreamReader(aGuthubResponse.getResponseStream()));
+	        	StringBuffer response = new StringBuffer();
+	        	while ((readLine = in .readLine()) != null) {
+	        		response.append(readLine);
+	        	} in .close();
+	        	// print result
+	        	System.out.println("JSON String Result " + response.toString());*/
+	        	mergeStatus = GithubResponseGsonParserLayer.parseResponseFromConnection(aGuthubResponse, aConManager);
+	        	
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			} 
+			
+		}
+		
 		return mergeStatus;
 	}
 	

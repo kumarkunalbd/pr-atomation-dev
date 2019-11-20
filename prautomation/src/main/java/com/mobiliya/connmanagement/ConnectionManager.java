@@ -148,19 +148,12 @@ public class ConnectionManager {
 		    		 System.out.println("Header Fields:"+conection.getHeaderFields());
 		    		    
 		    		 int responseCode = conection.getResponseCode();
-		    		 if(responseCode == HttpURLConnection.HTTP_NOT_FOUND) {
-		    			 githubResponse.setResponseCode(responseCode);
-		    			 String string2 = "{\r\n" + 
-		    					 "  \"message\": \"Base/Head does not exist\"\r\n" + 
-		    					 "}";
-		    			 InputStream targetStream = new ByteArrayInputStream(string2.getBytes(Charset.forName("UTF-8")));
-		    			 githubResponse.setResponseStream(targetStream);
-		    			 
+		    		 githubResponse.setResponseCode(responseCode);
+		    		 if(responseCode < HttpURLConnection.HTTP_BAD_REQUEST) {
+		    			 githubResponse.setResponseStream(conection.getInputStream());
 		    		 }else {
-		    			 githubResponse.setResponseCode(responseCode);
-			    		 githubResponse.setResponseStream(conection.getInputStream());
+		    			 githubResponse.setResponseStream(conection.getErrorStream());
 		    		 }
-		    		
 		    		
 		    		 return githubResponse;
 		    	}
@@ -170,6 +163,5 @@ public class ConnectionManager {
 		return aGithubResponse;
 		
 	}
-	
 	
 }

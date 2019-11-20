@@ -24,6 +24,7 @@ import com.mobiliya.parsemanagement.GithubPR;
 import com.mobiliya.utility.BranchMergeRequestBody;
 import com.mobiliya.utility.BranchMergeStatus;
 import com.mobiliya.utility.GithubConstants;
+import com.mobiliya.utility.PrAutoSingletonThSf;
 
 
 /**
@@ -197,9 +198,11 @@ public class GithubPRService {
 			
 			for (PullRequest aPR : listPRs) {
 				String prHeadSha = aPR.getHead().getRef();
-				String commitMessage  = "A trial merge from master to"+prHeadSha;
+				String commitMessage  = "master merged to PR number::#"+aPR.getNumber()+" with title::"+ aPR.getTitle();
 				BranchMergeRequestBody branchMergeBody = new BranchMergeRequestBody(prHeadSha, this.mergingHeadSha, commitMessage);
-				BranchMergeStatus mergeStatus = GithubBranchService.mergeBranchOnRepo(GithubConstants.GITHUB_Automation_Repository, branchMergeBody);
+				GithubBranchService githubBranchService = new GithubBranchService(PrAutoSingletonThSf.getInstance().getPropertiesGithub().getGitRestApiUrlPrefix(), PrAutoSingletonThSf.getInstance().getPropertiesGithub().getServiceAccount(), PrAutoSingletonThSf.getInstance().getPropertiesGithub().getServiceAccountPasswrod(), this.prRepositoryOwnerName);
+
+				BranchMergeStatus mergeStatus = githubBranchService.mergeBranchOnRepo(this.prRepositoryName, branchMergeBody);
 			}
 			
 		}else {
@@ -223,9 +226,10 @@ public class GithubPRService {
 				String masterBranchSha = GithubBranchService.getShaForBranchName(repo.getMasterBranch(), repo, service);
 				for (PullRequest aPR : prListAll) {
 					String prHeadSha = aPR.getHead().getRef();
-					String commitMessage  = "A trial merge from master to"+prHeadSha;
+					String commitMessage  = "master merged to PR number::#"+aPR.getNumber()+" with title::"+ aPR.getTitle();
 					BranchMergeRequestBody branchMergeBody = new BranchMergeRequestBody(prHeadSha, masterBranchSha, commitMessage);
-					BranchMergeStatus mergeStatus = GithubBranchService.mergeBranchOnRepo(GithubConstants.GITHUB_Automation_Repository, branchMergeBody);
+					GithubBranchService githubBranchService = new GithubBranchService(PrAutoSingletonThSf.getInstance().getPropertiesGithub().getGitRestApiUrlPrefix(), PrAutoSingletonThSf.getInstance().getPropertiesGithub().getServiceAccount(), PrAutoSingletonThSf.getInstance().getPropertiesGithub().getServiceAccountPasswrod(), this.prRepositoryOwnerName);
+					BranchMergeStatus mergeStatus = githubBranchService.mergeBranchOnRepo(this.prRepositoryName, branchMergeBody);
 					System.out.println(mergeStatus);
 				}
 				

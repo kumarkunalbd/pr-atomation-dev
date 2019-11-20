@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
 
+
 import org.eclipse.egit.github.core.MergeStatus;
 import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.Repository;
@@ -24,7 +25,11 @@ import com.mobiliya.parsemanagement.GithubPR;
 import com.mobiliya.parsemanagement.GithubResponseGsonMergeParseService;
 import com.mobiliya.utility.BranchMergeRequestBody;
 import com.mobiliya.utility.BranchMergeStatus;
+import com.mobiliya.utility.CommandLineOptions;
 import com.mobiliya.utility.GithubConstants;
+import com.mobiliya.utility.GithubProperties;
+import com.mobiliya.utility.GithubPropertiesService;
+import com.mobiliya.utility.PrAutoSingletonThSf;
 
 /**
  * Hello world!
@@ -44,12 +49,11 @@ public class App
         //List<GithubPR> prList = GithubPRService.getPullRequests(GithubConstants.GITHUB_Automation_Repository);
         
         //List<PullRequest> prListStateAll = GithubPRService.getPullRequestsRepoNameState(GithubConstants.GITHUB_Automation_Repository,"open");
+        
+        mergeGithubBaseBranchPRs(args);
        
-        GithubPRService aGitHubPrService = new GithubPRService();
-		aGitHubPrService.setPrRepositoryOwnerName(GithubConstants.GITHUB_SERIVICEACCOUNT);
-		aGitHubPrService.setPrRepositoryName(GithubConstants.GITHUB_Automation_Repository);
-		aGitHubPrService.setStatusForPRs(GithubConstants.GITHUB_PRSTATE_OPEN);
-		aGitHubPrService.mergeDefaultBranchShaToPRs();
+       
+      
         
         
         //A trail merge on behalf of person for a PR
@@ -82,4 +86,27 @@ public class App
         System.out.print(statusMerge.toString());*/
         
     }
+    
+    public static void mergeGithubBaseBranchPRs(String[] args) {
+
+    	CommandLineOptions cmdOptions = new CommandLineOptions(args);
+    	String attributeFilePath = cmdOptions.valueOfOption("AttributeFile");
+    	System.out.println(attributeFilePath);
+    	
+    	PrAutoSingletonThSf prSingletonObj = PrAutoSingletonThSf.getInstance();
+    	
+    	GithubPropertiesService githubPropertiesService  = new GithubPropertiesService();
+    	GithubProperties gitHubProps = githubPropertiesService.setGithubPropertiesFromFile(attributeFilePath);
+    	System.out.println(gitHubProps);
+    	prSingletonObj.setPropertiesGithub(gitHubProps);
+    			
+    	GithubPRService aGitHubPrService = new GithubPRService();
+    	aGitHubPrService.setPrRepositoryOwnerName(PrAutoSingletonThSf.getInstance().getPropertiesGithub().getServiceAccount());
+    	aGitHubPrService.setPrRepositoryName(PrAutoSingletonThSf.getInstance().getPropertiesGithub().getRepoName());
+    	aGitHubPrService.setStatusForPRs(PrAutoSingletonThSf.getInstance().getPropertiesGithub().getStateOfPRsForMerge());
+    	aGitHubPrService.mergeDefaultBranchShaToPRs();
+
+    }
+    
+
 }
