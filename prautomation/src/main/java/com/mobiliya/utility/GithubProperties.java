@@ -22,6 +22,7 @@ public class GithubProperties {
 	private String filterType;
 	private String stateOfPRsForMerge;
 	private boolean isBasePRMergingCyclic;
+	private String prefixCommentOnPr;
 	
 	
 	/*public GithubProperties() {
@@ -118,6 +119,21 @@ public class GithubProperties {
 		this.isBasePRMergingCyclic = isBasePRMergingCyclic;
 	}
 	
+	
+	
+	public String getPrefixCommentOnPr() {
+		return prefixCommentOnPr;
+	}
+
+
+	public void setPrefixCommentOnPr(String prefixCommentOnPr) {
+		this.prefixCommentOnPr = prefixCommentOnPr;
+	}
+
+
+	
+
+	
 	@Override
 	public String toString() {
 		return "GithubProperties [sourceFileName=" + sourceFileName + ", repoOwnerName=" + repoOwnerName + ", repoName="
@@ -126,10 +142,10 @@ public class GithubProperties {
 				+ gitRestApiUrlPrefix + ", mainBranch=" + mainBranch + ", sourceBranchToMergeInPRBranches="
 				+ sourceBranchToMergeInPRBranches + ", filterWords_PullRequests=" + filterWords_PullRequests
 				+ ", filterType=" + filterType + ", stateOfPRsForMerge=" + stateOfPRsForMerge
-				+ ", isBasePRMergingCyclic=" + isBasePRMergingCyclic + "]";
+				+ ", isBasePRMergingCyclic=" + isBasePRMergingCyclic + ", prefixCommentOnPr=" + prefixCommentOnPr + "]";
 	}
 
-	
+
 	public void setPropetiesValues() {
 		InputStream inputStream = null;
 		
@@ -153,6 +169,7 @@ public class GithubProperties {
 				this.stateOfPRsForMerge = aProp.getProperty("stateOfPRsForMerge");
 				//String isCyclic = aProp.getProperty("isBasePRMergingCyclic");
 				this.isBasePRMergingCyclic = Boolean.valueOf(aProp.getProperty("isBasePRMergingCyclic"));
+				this.prefixCommentOnPr = aProp.getProperty("prefixCommentOnPr");
 				
 			}
 			

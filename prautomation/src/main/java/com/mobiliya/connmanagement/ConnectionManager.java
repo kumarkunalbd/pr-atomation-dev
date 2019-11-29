@@ -123,7 +123,8 @@ public class ConnectionManager {
 		    if(this.parameters != null && !this.parameters.isEmpty()) {
 		    	String userId = (String) this.parameters.get(GithubConstants.GITHUB_SERIVICEACCOUNT_FIELDNAME);
 		    	String password = (String) this.parameters.get(GithubConstants.GITHUB_SERIVICEACCOUNT_PASSWORD_FIELDNAME);
-		    	BranchMergeRequestBody requestBody = (BranchMergeRequestBody) this.parameters.get(GithubConstants.GITHUB_KEY_REQUESTBODY);
+		    	//BranchMergeRequestBody requestBody = (BranchMergeRequestBody) this.parameters.get(GithubConstants.GITHUB_KEY_REQUESTBODY);
+		    	Object requestBody = this.parameters.get(GithubConstants.GITHUB_KEY_REQUESTBODY);
 		    	String POST_PARAMS_BODY = new Gson().toJson(requestBody);
 		    	System.out.println("POST_PARAMS_BODY::" +POST_PARAMS_BODY);
 		    	System.out.println("ACTUAL REQUEST METHOD SET::" +conection.getRequestMethod());

@@ -25,6 +25,7 @@ import com.google.gson.JsonParser;
 import com.mobiliya.connmanagement.GithubResponse;
 import com.mobiliya.utility.BranchMergeStatus;
 import com.mobiliya.utility.CommitBlob;
+import com.mobiliya.utility.MergeBranchStatusType;
 
 /**
  * @author kumar
@@ -38,9 +39,9 @@ public class GithubResponseGsonMergeParseService {
 	public static BranchMergeStatus parseTheResponse(GithubResponse response) {
 		BranchMergeStatus status = null;
 		
-		File initialFile = new File("src/main/resources/Merging-JSON-Response.json");
+		//File initialFile = new File("src/main/resources/Merging-JSON-Response.json");
 	    try {
-			InputStream targetStream = new FileInputStream(initialFile);
+			//InputStream targetStream = new FileInputStream(initialFile);
 			switch (response.getResponseCode()) {
 			case HttpURLConnection.HTTP_CREATED:
 				status = parseCreatedResponseStream(response.getResponseStream());
@@ -55,7 +56,7 @@ public class GithubResponseGsonMergeParseService {
 				String string = "{\r\n" + 
 						"  \"message\": \"Merge Conflict\"\r\n" + 
 						"}";
-				targetStream = new ByteArrayInputStream(string.getBytes(Charset.forName("UTF-8")));
+				//targetStream = new ByteArrayInputStream(string.getBytes(Charset.forName("UTF-8")));
 				status = parseConflictResponseStream(response.getResponseStream());
 				break;
 				
@@ -63,14 +64,14 @@ public class GithubResponseGsonMergeParseService {
 				String string2 = "{\r\n" + 
 						"  \"message\": \"Base/Head does not exist\"\r\n" + 
 						"}";
-				targetStream = new ByteArrayInputStream(string2.getBytes(Charset.forName("UTF-8")));
+				//targetStream = new ByteArrayInputStream(string2.getBytes(Charset.forName("UTF-8")));
 				status = parseMissingHeadBaseResponseStream(response.getResponseStream());
 				break;
 				
 			default:
 				break;
 			}
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -129,6 +130,7 @@ public class GithubResponseGsonMergeParseService {
 		}
         
         mergeStatus.setArrParents(arrParentCommitBlob);
+        mergeStatus.setNonMergeType(MergeBranchStatusType.MERGED);
         
 		return mergeStatus;
 	}
@@ -144,6 +146,7 @@ public class GithubResponseGsonMergeParseService {
         if(messageElement != null) {
         	mergeStatus.setMessage(messageElement.toString());
         }
+        mergeStatus.setNonMergeType(MergeBranchStatusType.NONMERGE_MERGECONFLICT);
 		
 		return mergeStatus;
 	}
@@ -159,6 +162,7 @@ public class GithubResponseGsonMergeParseService {
 		if(messageElement != null) {
 			mergeStatus.setMessage(messageElement.toString());
 		}
+		mergeStatus.setNonMergeType(MergeBranchStatusType.NONMERGE_MISSINGBASEHEAD);
 
 		return mergeStatus;
 	}
@@ -167,6 +171,7 @@ public class GithubResponseGsonMergeParseService {
 		BranchMergeStatus mergeStatus = new BranchMergeStatus();
 		mergeStatus.setMerged(false);
 		mergeStatus.setMessage("Base already contains the head, nothing to merge");
+		mergeStatus.setNonMergeType(MergeBranchStatusType.NONMERGE_CONTENTSAME);
 		
 		return mergeStatus;
 	}

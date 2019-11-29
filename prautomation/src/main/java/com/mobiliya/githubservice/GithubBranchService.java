@@ -11,6 +11,8 @@ import java.util.List;
 
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryBranch;
+import org.eclipse.egit.github.core.RepositoryCommit;
+import org.eclipse.egit.github.core.service.CommitService;
 import org.eclipse.egit.github.core.service.RepositoryService;
 
 import com.mobiliya.connmanagement.ConnectionManager;
@@ -178,6 +180,7 @@ public class GithubBranchService {
 			if(masterBranch != null) {
 				sha = masterBranch.getCommit().getSha();
 				System.out.println(sha);
+				
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -185,6 +188,22 @@ public class GithubBranchService {
 		}
 		
 		return sha;
+	}
+	
+	public static String getCommitMessageForCommitSha(String commitSha, Repository repo) {
+		String commitMessage = null;
+		//RepositoryService service = new RepositoryService();
+		CommitService commitService = new CommitService();
+		try {
+			RepositoryCommit aCommit = commitService.getCommit(repo, commitSha);
+			commitMessage = aCommit.getCommit().getMessage();
+			System.out.println(commitMessage);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return commitMessage;
 	}
 
 }

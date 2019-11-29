@@ -17,7 +17,7 @@ public class BranchMergeStatus {
 	private CommitBlob currentCommit;
 	private String message;
 	private ArrayList<CommitBlob> arrParentCommits;
-	
+	private MergeBranchStatusType nonMergeType;
 	
 	
 	public BranchMergeStatus() {
@@ -63,6 +63,16 @@ public class BranchMergeStatus {
 
 	public void setArrParents(ArrayList<CommitBlob> arrParents) {
 		this.arrParentCommits = arrParents;
+	}
+	
+	
+
+	public MergeBranchStatusType getNonMergeType() {
+		return nonMergeType;
+	}
+
+	public void setNonMergeType(MergeBranchStatusType nonMergeType) {
+		this.nonMergeType = nonMergeType;
 	}
 
 	@Override

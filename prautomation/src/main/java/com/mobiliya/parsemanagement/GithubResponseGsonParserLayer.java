@@ -5,6 +5,7 @@ package com.mobiliya.parsemanagement;
 import com.mobiliya.connmanagement.ConnectionManager;
 import com.mobiliya.connmanagement.GithubResponse;
 import com.mobiliya.utility.BranchMergeStatus;
+import com.mobiliya.utility.GithubComment;
 
 public class GithubResponseGsonParserLayer {
 	
@@ -53,6 +54,12 @@ public class GithubResponseGsonParserLayer {
 	public static BranchMergeStatus parseResponse(GithubResponse response) {
 		BranchMergeStatus mergeStatus = GithubResponseGsonMergeParseService.parseTheResponse(response);
 		return mergeStatus;
+	}
+	
+	public static GithubComment parseResponseIssueComment(GithubResponse response, ConnectionManager connection) {
+		GithubComment aGitHUbComment = null;
+		aGitHUbComment = GithubResponseGsonIssueCommentParseService.parseResponse(response);
+		return aGitHUbComment;
 	}
 
 }

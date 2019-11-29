@@ -6,13 +6,21 @@ package com.mobiliya.githubservice;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import org.eclipse.egit.github.core.Comment;
+import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.MergeStatus;
 import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.egit.github.core.RepositoryId;
+import org.eclipse.egit.github.core.client.GitHubClient;
+import org.eclipse.egit.github.core.service.CommitService;
+import org.eclipse.egit.github.core.service.IssueService;
 import org.eclipse.egit.github.core.service.PullRequestService;
 import org.eclipse.egit.github.core.service.RepositoryService;
 
@@ -23,7 +31,10 @@ import com.mobiliya.connmanagement.RequestTypes;
 import com.mobiliya.parsemanagement.GithubPR;
 import com.mobiliya.utility.BranchMergeRequestBody;
 import com.mobiliya.utility.BranchMergeStatus;
+import com.mobiliya.utility.CommentRequestBody;
+import com.mobiliya.utility.GithubComment;
 import com.mobiliya.utility.GithubConstants;
+import com.mobiliya.utility.MergeBranchStatusType;
 import com.mobiliya.utility.PrAutoSingletonThSf;
 
 
@@ -224,13 +235,31 @@ public class GithubPRService {
 				
 				Repository repo = service.getRepository(this.prRepositoryOwnerName, this.prRepositoryName);
 				String masterBranchSha = GithubBranchService.getShaForBranchName(repo.getMasterBranch(), repo, service);
+				
+				/* Commit Message for Master Branch */
+				CommitService commitService = new CommitService();
+				RepositoryCommit aCommit = commitService.getCommit(repo, masterBranchSha);
+				String lastCommitMessageMaster = aCommit.getCommit().getMessage();
+				System.out.println(lastCommitMessageMaster);
+				/* Commit message for master branch ends */
+				List<PullRequest> listMergedConflictPrs = new ArrayList<PullRequest>();
 				for (PullRequest aPR : prListAll) {
 					String prHeadSha = aPR.getHead().getRef();
-					String commitMessage  = "master merged to PR number::#"+aPR.getNumber()+" with title::"+ aPR.getTitle();
+					//String commitMessage  = "master merged to PR number::#"+aPR.getNumber()+" with title::"+ aPR.getTitle();
+					String commitMessage  = "master updated to ::"+lastCommitMessageMaster;
 					BranchMergeRequestBody branchMergeBody = new BranchMergeRequestBody(prHeadSha, masterBranchSha, commitMessage);
 					GithubBranchService githubBranchService = new GithubBranchService(PrAutoSingletonThSf.getInstance().getPropertiesGithub().getGitRestApiUrlPrefix(), PrAutoSingletonThSf.getInstance().getPropertiesGithub().getServiceAccount(), PrAutoSingletonThSf.getInstance().getPropertiesGithub().getServiceAccountPasswrod(), this.prRepositoryOwnerName);
 					BranchMergeStatus mergeStatus = githubBranchService.mergeBranchOnRepo(this.prRepositoryName, branchMergeBody);
 					System.out.println(mergeStatus);
+					//TimeUnit.SECONDS.sleep(120);
+					
+					if(mergeStatus.getNonMergeType()== MergeBranchStatusType.NONMERGE_MERGECONFLICT) {
+						listMergedConflictPrs.add(aPR);
+					}
+				}
+				
+				if(!listMergedConflictPrs.isEmpty()) {
+					this.postCommentOnPrList(listMergedConflictPrs);
 				}
 				
 			} catch (Exception e) {
@@ -243,5 +272,73 @@ public class GithubPRService {
 		}
 		
 	}
+	
+	
+	public void postCommentOnPrList(List<PullRequest> prList) {
+		for(PullRequest aPr: prList) {
+			//this.postCommentOnPr(aPr);
+			this.postCommentOnPrUsingInbuiltRestCall(aPr);
+		}
+	}
+	
+	
+	public void postCommentOnPrUsingInbuiltRestCall(PullRequest aPr) {
+		String urlForComment = aPr.getIssueUrl()+"/comments";
+		RepositoryService service = new RepositoryService();
+		Repository repo;
+		try {
+			repo = service.getRepository(this.prRepositoryOwnerName, this.prRepositoryName);
+			String masterBranchSha = GithubBranchService.getShaForBranchName(repo.getMasterBranch(), repo, service);
+			String lastCommitMessageMaster = GithubBranchService.getCommitMessageForCommitSha(masterBranchSha, repo);
+			PrAutoSingletonThSf prSingletonObj = PrAutoSingletonThSf.getInstance();
+			String prefixComment = prSingletonObj.getPropertiesGithub().getPrefixCommentOnPr();
+			String commentToAdd;
+			if(prefixComment != null) {
+				commentToAdd = prefixComment+" "+lastCommitMessageMaster;
+			}else {
+				commentToAdd = "Conflict while merging master up to " + lastCommitMessageMaster;
+			}
+			CommentRequestBody commentBody = new CommentRequestBody(commentToAdd);
+			IssueCommentService issueCommentService = new IssueCommentService(prSingletonObj.getPropertiesGithub().getServiceAccount(), prSingletonObj.getPropertiesGithub().getServiceAccountPasswrod(),
+					prSingletonObj.getPropertiesGithub().getRepoOwnerName());
+			GithubComment commentAdded = issueCommentService.createComment(urlForComment, commentBody);
+			if(commentAdded != null) {
+				System.out.println("Comment Addde on Pr :: "+ commentAdded.getBody());
+				System.out.println("Comment Url is :: "+ commentAdded.getUrl());
+				System.out.println("Comment HtmlUrl is :: "+ commentAdded.getHtml_url());
+			}else {
+				System.out.println("COMMENT FAILED TO GET ADDED");
+			}
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void postCommentOnPr(PullRequest aPr) {
+		RepositoryService service = new RepositoryService();
+		try {
+			
+			System.out.println("Issue Url:"+ aPr.getIssueUrl());
+			Repository repo = service.getRepository(this.prRepositoryOwnerName, this.prRepositoryName);
+			IssueService aIssueService = new IssueService();
+			CommitComment aComment = new CommitComment();
+			aComment.setBody("A test Body");
+			aComment.setBodyText("A Test BodyText");
+			String shaHead = aPr.getHead().getSha();
+			Comment returnedComment = aIssueService.createComment(repo, String.valueOf(aPr.getNumber()), "A Test Comment From Java Program");
+			System.out.println("Commnet added at url:"+returnedComment.getUrl());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	
+	
 	
 }

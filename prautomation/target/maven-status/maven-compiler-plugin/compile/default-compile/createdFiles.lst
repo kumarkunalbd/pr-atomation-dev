@@ -7,6 +7,7 @@ com\mobiliya\utility\PrAutoSingletonThSf.class
 com\mobiliya\utility\BranchMergeRequestBody.class
 com\mobiliya\connmanagement\GithubSegmentType.class
 com\mobiliya\utility\BranchMergeStatus.class
+com\mobiliya\githubservice\IssueCommentService.class
 com\mobiliya\connmanagement\GitResponse.class
 com\mobiliya\connmanagement\RequestTypes$1.class
 com\mobiliya\connmanagement\ConnectionManager.class
@@ -17,8 +18,12 @@ com\mobiliya\connmanagement\RequestTypes$2.class
 com\mobiliya\prautomation\App.class
 com\mobiliya\parsemanagement\GithubPR.class
 com\mobiliya\utility\CommitBlob.class
+com\mobiliya\utility\GithubComment.class
 com\mobiliya\utility\GithubConstants.class
+com\mobiliya\parsemanagement\GithubResponseGsonIssueCommentParseService.class
 com\mobiliya\utility\CommandLineOptions.class
+com\mobiliya\utility\MergeBranchStatusType.class
 com\mobiliya\parsemanagement\GithubResponseGsonMergeParseService.class
+com\mobiliya\utility\CommentRequestBody.class
 com\mobiliya\githubservice\GithubBranchService.class
 com\mobiliya\utility\GithubProperties.class
