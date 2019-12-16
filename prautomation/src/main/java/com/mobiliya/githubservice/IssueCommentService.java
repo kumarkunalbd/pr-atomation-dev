@@ -45,6 +45,14 @@ public class IssueCommentService {
 		this.repoOwnerName = repoOwnerName;
 	}
 
+	/**
+	 * @author kumar
+	 * This method will cerate comment for PRs
+	 * @param
+	 * urlComment: git REST Api url for PR
+	 * commentBody: comment body
+	 * 
+	 */
 
 
 	public GithubComment createComment(String urlComment, CommentRequestBody commentBody) {

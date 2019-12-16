@@ -80,6 +80,13 @@ public class GithubResponseGsonMergeParseService {
 		return status; 
 	}
 	
+	/**
+	 * @author kumar
+	 * This method will parse branch merge success reponse
+	 * @param
+	 * 
+	 */
+	
 	public static BranchMergeStatus parseCreatedResponseStream(InputStream responseStream) {
 		BranchMergeStatus mergeStatus = new BranchMergeStatus();
 		
@@ -135,6 +142,13 @@ public class GithubResponseGsonMergeParseService {
 		return mergeStatus;
 	}
 	
+	/**
+	 * @author kumar
+	 * This method will parse branch merge conflict response
+	 * @param
+	 * 
+	 */
+	
 	public static BranchMergeStatus parseConflictResponseStream(InputStream responseStream) {
 		BranchMergeStatus mergeStatus = new BranchMergeStatus();
 		mergeStatus.setMerged(false);
@@ -151,6 +165,13 @@ public class GithubResponseGsonMergeParseService {
 		return mergeStatus;
 	}
 	
+	/**
+	 * @author kumar
+	 * This method will parse branch missing response
+	 * @param
+	 * 
+	 */
+	
 	public static BranchMergeStatus parseMissingHeadBaseResponseStream(InputStream responseStream) {
 		BranchMergeStatus mergeStatus =  new BranchMergeStatus();
 		mergeStatus.setMerged(false);
@@ -166,6 +187,13 @@ public class GithubResponseGsonMergeParseService {
 
 		return mergeStatus;
 	}
+	
+	/**
+	 * @author kumar
+	 * This method will parse branch already exist response
+	 * @param
+	 * 
+	 */
 	
 	public static BranchMergeStatus parseNOResponseStream() {
 		BranchMergeStatus mergeStatus = new BranchMergeStatus();

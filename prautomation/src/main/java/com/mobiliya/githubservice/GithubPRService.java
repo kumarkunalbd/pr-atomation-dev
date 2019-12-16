@@ -203,6 +203,12 @@ public class GithubPRService {
 		
 	}
 	
+	/**
+	 * @author kumar
+	 * This will merge the pull request on origin branch.
+	 * 
+	 */
+	
 	public void mergePrList(List<PullRequest> listPRs) {
 		
 		if(this.mergingHeadSha != null) {
@@ -223,6 +229,13 @@ public class GithubPRService {
 		
 
 	}
+	
+	
+	/**
+	 * @author kumar
+	 * This will merge the default(master) branch to feature branch of PR
+	 * 
+	 */
 	
 	public void mergeDefaultBranchShaToPRs() {
 		if(this.prRepositoryName != null && this.prRepositoryOwnerName != null 
@@ -282,6 +295,13 @@ public class GithubPRService {
 	}
 	
 	
+	/**
+	 * @author kumar
+	 * This will merge the pull request. 
+	 * This is being done on behalf of Person merge(a Trial automation which will be finally removed)
+	 * 
+	 */
+	
 	public void postCommentOnPrUsingInbuiltRestCall(PullRequest aPr) {
 		String urlForComment = aPr.getIssueUrl()+"/comments";
 		RepositoryService service = new RepositoryService();
@@ -317,6 +337,12 @@ public class GithubPRService {
 		
 	}
 	
+	/**
+	 * @author kumar
+	 * This will post comment on Pull Requests 
+	 * 
+	 */
+	
 	public void postCommentOnPr(PullRequest aPr) {
 		RepositoryService service = new RepositoryService();
 		try {
@@ -335,10 +361,6 @@ public class GithubPRService {
 			e.printStackTrace();
 		}
 		
-	}
-	
-	
-	
-	
+	}	
 	
 }

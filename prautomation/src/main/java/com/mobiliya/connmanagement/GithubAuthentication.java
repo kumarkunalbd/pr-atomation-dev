@@ -7,6 +7,13 @@ import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.RepositoryService;
 
 
+/**
+ * @author kumar
+ * Will purpose the authentication mechanism.
+ * for requests 
+ *
+ */
+
 public class GithubAuthentication {
 	private String serviceAccount;
 	private String serviceAccountPassowrd;

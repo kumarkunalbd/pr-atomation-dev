@@ -15,6 +15,13 @@ import com.google.gson.Gson;
 import com.mobiliya.utility.BranchMergeRequestBody;
 import com.mobiliya.utility.GithubConstants;
 
+
+/**
+ * @author kumar
+ * This class is used for connection management
+ * for requests 
+ *
+ */
 public class ConnectionManager {
 	
 	private String requestUrl;
@@ -84,6 +91,13 @@ public class ConnectionManager {
 
 
 
+	/**
+	 * @author kumar
+	 * This method is being used to create GET requests.
+	 * for requests 
+	 *
+	 */ 
+	
 	public GithubResponse createGETRequestGithub() throws IOException{
 		if(this.requestType != null && this.requestUrl != null && this.guthubSegmentType != null) {
 			URL urlForGetRequest = new URL(this.requestUrl);
@@ -107,6 +121,14 @@ public class ConnectionManager {
 		
 		return null;	
 	}
+	
+	
+	/**
+	 * @author kumar
+	 * This method is being used for POST requests
+	 * for requests 
+	 *
+	 */
 	
 
 	public GithubResponse createPostRequestGithub() throws IOException{

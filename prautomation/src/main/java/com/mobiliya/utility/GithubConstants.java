@@ -5,8 +5,8 @@ public class GithubConstants {
 		
 	}// Will never be instantiated
 	
-	public static final String GITHUB_SERIVICEACCOUNT = "kumarkunalbd";
-	public static final String GITHUB_SERIVICEACCOUNT_PASSWORD = "kundi@1984";
+	public static final String GITHUB_SERIVICEACCOUNT = "*****";
+	public static final String GITHUB_SERIVICEACCOUNT_PASSWORD = "******";
 	public static final String GITHUB_SERIVICEACCOUNT_FIELDNAME = "userId";
 	public static final String GITHUB_SERIVICEACCOUNT_PASSWORD_FIELDNAME = "password";
 	public static final String GITHUB_RESTAPI_INITIAL = "https://api.github.com/repos/";

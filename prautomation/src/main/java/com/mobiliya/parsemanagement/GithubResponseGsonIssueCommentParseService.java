@@ -15,7 +15,8 @@ import com.mobiliya.utility.CommitBlob;
 import com.mobiliya.utility.GithubComment;
 
 /**
- * @author kumar
+ * @author kumar kunal
+ * Parsing responses from Got REST APIs
  *
  */
 public class GithubResponseGsonIssueCommentParseService {

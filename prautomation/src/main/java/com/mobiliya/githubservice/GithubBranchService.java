@@ -28,6 +28,7 @@ import com.mobiliya.utility.PrAutoSingletonThSf;
 
 /**
  * @author kumar
+ * This class is being used to get Branch information from Git REST APIs.
  *
  */
 public class GithubBranchService {
@@ -119,6 +120,14 @@ public class GithubBranchService {
 	}*/
 	
 
+	/**
+	 * @author kumar
+	 * This method will merge Branches
+	 * @Params
+	 * repoName : Repository Name
+	 * reuqestBody: Body of POST request
+	 * 
+	 */
 	
 	public BranchMergeStatus mergeBranchOnRepo(String repoName, BranchMergeRequestBody reuqestBody) {
 		
@@ -163,6 +172,16 @@ public class GithubBranchService {
 		return mergeStatus;
 	}
 	
+	/**
+	 * @author kumar
+	 * This method will get latest commit id on the specific branch
+	 * @Params
+	 * repo : Repository Object
+	 * branchName: name of Branch for latest commit id
+	 * service: Repository Service
+	 * 
+	 */
+	
 	public static String getShaForBranchName(String branchName, Repository repo, RepositoryService service) {
 		String sha = null;
 		
@@ -189,6 +208,15 @@ public class GithubBranchService {
 		
 		return sha;
 	}
+	
+	/**
+	 * @author kumar
+	 * This method will get commit message for particular commit ID
+	 * @Params
+	 * commitSha : Commit Id whose message need to be taken
+	 * repo: Repository Object
+	 * 
+	 */
 	
 	public static String getCommitMessageForCommitSha(String commitSha, Repository repo) {
 		String commitMessage = null;

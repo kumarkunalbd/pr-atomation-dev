@@ -2,6 +2,13 @@ package com.mobiliya.connmanagement;
 
 import java.io.InputStream;
 
+/**
+ * @author kumar
+ * This class represtent the Github Response.
+ * for requests 
+ *
+ */
+
 public class GitResponse {
 	
 	public int responseCode;
